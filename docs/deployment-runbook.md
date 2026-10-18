@@ -108,3 +108,5 @@ Only after these checks pass may the owner authorize connecting/importing the pe
 - Anonymous/unauthorized denial and owner sign-in have not been tested against a live deployment. Desktop Vercel authentication and physical Android acceptance remain unverified.
 
 These local results do not clear the security gate. Real archive import remains BLOCKED until Neon environment separation, GitHub-triggered deployments, independent access denial, and owner/device acceptance are completed.
+
+- Preview: a same-commit branch push did not create a deployment. A PR-triggered preview check is being prepared; preview database credentials are not configured.
