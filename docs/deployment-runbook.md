@@ -1,6 +1,6 @@
 # Private deployment runbook
 
-This runbook covers Milestone 5 delivery and owner checks. **Personal archive import is BLOCKED until Vercel Authentication on All Deployments and independent access denial are verified.** Use synthetic records while validating. No personal archive contents, credentials, bypass values, or real vectors belong in this document or the public repository.
+This runbook covers Milestone 5 delivery and owner checks. **Personal archive import is BLOCKED until Vercel Authentication on All Deployments, anonymous and unauthorized-account denial, automation bypass review, owner access, and database separation are verified.** Anonymous denial has passed for the specific production and preview paths recorded below; the other gates remain open. Use synthetic records while validating. No personal archive contents, credentials, bypass values, or real vectors belong in this document or the public repository.
 
 ## Evidence at M5 kickoff — 2026-10-18
 
