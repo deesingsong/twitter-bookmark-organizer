@@ -11,7 +11,7 @@ The Milestone 1–4 implementation includes:
 - Exact identifiers, URLs, handles and phrases, PostgreSQL full-text search, and bounded typo matching.
 - Optional local browser embeddings, resumable indexing, pgvector retrieval, hybrid reciprocal-rank fusion, and lexical fallback when the model is unavailable.
 
-Milestone 5 privacy and delivery validation is in progress. Local synthetic checks have been run, but a protected Vercel deployment, preview/production database separation, anonymous denial, unauthorized-account denial, and owner access on desktop and Android remain **UNVERIFIED / BLOCKED**. No personal archive has been imported. Real archive import stays blocked until those access checks pass; see the [deployment runbook](docs/deployment-runbook.md) for the evidence and remaining gates.
+Milestone 5 local synthetic checks pass, and a code-only production build has deployed through the GitHub integration. Vercel Authentication is set to All Deployments; anonymous production requests to the UI, APIs, and a static asset were denied in network checks. Preview verification, owner sign-in, unauthorized-account checks, production/preview database isolation, and physical Android acceptance remain **UNVERIFIED / BLOCKED**. The Vercel project has no database environment variables. No personal archive has been imported. Real archive import stays blocked until the remaining access and database checks pass; see the [deployment runbook](docs/deployment-runbook.md) for evidence and next steps.
 
 ## Requirements
 
