@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "import_jobs_active_file_unique" ON "import_jobs" USING btree ("source_format","source_file_hash") WHERE "import_jobs"."source_file_hash" is not null and "import_jobs"."status" in ('pending', 'processing');

@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.tmp-workspace/
+*.tsbuildinfo
+out/
+coverage/
+playwright-report/
+test-results/
+.vercel/
+.codex/handoffs/
+.env*
+!.env.example
+x-bookmarks-*.json
+*.log
+drizzle/meta/_journal.json.tmp

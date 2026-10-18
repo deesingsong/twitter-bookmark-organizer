@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "source": "synthetic-fixture",
+  "exportedAt": "2026-10-16T00:00:00.000Z",
+  "range": { "type": "all" },
+  "count": 4,
+  "bookmarks": [
+    {
+      "id": "9007199254740993",
+      "url": "https://mobile.twitter.com/sample_user/status/9007199254740993?ref=synthetic",
+      "text": "Synthetic post about a sample research topic.",
+      "author": {
+        "id": "9007199254740995",
+        "screenName": "sample_user",
+        "name": "Synthetic Author",
+        "avatarUrl": "https://media.example.test/avatar.jpg",
+        "verified": false
+      },
+      "createdAt": "2024-01-02T03:04:05.000Z",
+      "bookmarkedAt": "2024-02-03T04:05:06.000Z",
+      "lastSeenAt": "2024-02-04T05:06:07.000Z",
+      "lang": "en",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://media.example.test/synthetic-image.jpg",
+          "previewUrl": "https://media.example.test/synthetic-preview.jpg",
+          "videoUrl": null
+        }
+      ],
+      "metrics": { "bookmarks": 3, "likes": 8, "replies": 1, "retweets": 2, "views": null },
+      "quotedTweet": {
+        "id": "9007199254740997",
+        "url": "https://x.com/quoted_user/status/9007199254740997",
+        "text": "Synthetic quoted text.",
+        "author": {
+          "id": "9007199254740998",
+          "screenName": "quoted_user",
+          "name": "Quoted Synthetic Author",
+          "avatarUrl": "https://media.example.test/quoted-avatar.jpg",
+          "verified": true
+        },
+        "createdAt": "2023-11-01T00:00:00.000Z",
+        "lang": "en",
+        "media": [],
+        "metrics": { "bookmarks": 1, "likes": 2, "replies": 0, "retweets": 0, "views": 10 },
+        "quotedTweet": null
+      }
+    },
+    {
+      "id": "9007199254740993",
+      "url": "https://x.com/sample_user/status/9007199254740993?utm_source=synthetic",
+      "text": "Synthetic duplicate from another X domain variant.",
+      "author": null,
+      "createdAt": null,
+      "bookmarkedAt": null,
+      "lastSeenAt": null,
+      "lang": null,
+      "media": [],
+      "metrics": null,
+      "quotedTweet": null
+    },
+    {
+      "url": "https://www.x.com/another_user/status/9007199254740994?tracking=synthetic",
+      "text": "Synthetic record whose string ID is recovered from its status URL.",
+      "author": {
+        "id": "9007199254740999",
+        "screenName": "another_user",
+        "name": "Another Synthetic Author",
+        "avatarUrl": "https://media.example.test/another-avatar.jpg",
+        "verified": false
+      },
+      "createdAt": "2024-03-04T05:06:07.000Z",
+      "bookmarkedAt": null,
+      "lastSeenAt": null,
+      "lang": "en",
+      "media": [],
+      "metrics": { "bookmarks": 0, "likes": 0, "replies": 0, "retweets": 0, "views": 0 },
+      "quotedTweet": null
+    },
+    {
+      "id": null,
+      "url": null,
+      "text": "Synthetic unidentifiable record, expected to be rejected.",
+      "author": null,
+      "createdAt": null,
+      "bookmarkedAt": null,
+      "lastSeenAt": null,
+      "lang": null,
+      "media": [],
+      "metrics": null,
+      "quotedTweet": null
+    }
+  ]
+}
