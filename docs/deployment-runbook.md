@@ -150,3 +150,27 @@ This dated update supersedes any earlier statements above that no production Neo
 6. Only after every gate passes, explicitly authorize the personal archive import.
 
 Until these actions are complete, personal archive import remains **BLOCKED**. The staging branch was pushed through GitHub, and its Vercel Preview check succeeded on commit `111dc643`. No production deployment was initiated, and no personal bookmark data was uploaded.
+
+## Final integration recheck — 2026-10-19
+
+### Owner-confirmed Vercel access results
+
+The owner reports Vercel Authentication set to **All Deployments**, owner access to production and the current staging Preview, authentication required from incognito on both, and no unintended users or access grants. The owner has not tested a separate unauthorized Vercel account. Earlier owner reports say the automation bypass was revoked; this remains owner-reported. Review of Deployment Protection Exceptions and Trusted Sources was not separately confirmed.
+
+The Vercel project API currently returns 403 for this session's project scope. I therefore could not independently read protection settings, membership, domains, bypass inventory, or environment-variable metadata, and I did not retry the historical CLI path. The production domain and current staging Preview hostname could not be independently identified here, so no fresh anonymous HTTP checks were made in this pass. The owner-reported incognito checks are recorded as owner-confirmed, not as independently reproduced.
+
+### Production Neon read-only audit
+
+Project `twitter-bookmark-organizer-production` (`proud-forest-76521048`), region `aws-ap-southeast-1`, reports PostgreSQL 17.11. A read-only transaction confirmed `neondb`, five applied Drizzle migrations, `vector` 0.8.0, `pg_trgm` 1.6, the `vector(384)` embedding column, and the expected bookmark identity/search and embedding lifecycle indexes. The embedding lifecycle and search triggers were present. Counts were zero for bookmarks (including notes), tags, bookmark-tag relationships, collections, collection-bookmark relationships, embeddings, import jobs, and import batches. No rows were inserted or changed.
+
+### Environment and release state
+
+The app runtime reads server-only `DATABASE_URL`; `DATABASE_URL_UNPOOLED` is used by the local Drizzle migration config. No production variables were added to Vercel because this session cannot access the project settings API. Production credentials remain absent from local files and Git. Preview remains without production credentials; its database isolation is unverified.
+
+The staging branch is 13 commits ahead of `main`, with six changed files and no commits behind. It contains the transaction-local search settings fix and updated status documentation; the latest GitHub-triggered Preview check succeeded. PR #1 remains open and documentation-only. A separate PR from `staging/vercel-test` to `main` is the candidate for review; no PR is merged automatically.
+
+Synthetic production application tests were not run: the deployed app could not be reached through an independently identified origin with an owner-authenticated session, and production credentials have not been configured in Vercel. The database remains empty.
+
+### Android owner procedure
+
+After the production environment and protected deployment are ready, use Android Chrome signed in through Vercel Authentication. Record device model, Android/Chrome versions, first and cached model initialization times, and whether inference reports WebGPU or WASM. Browse synthetic bookmarks, try filters and search, edit a note, manage a collection, run semantic and hybrid search, background/reopen Chrome to check session and model-cache persistence, and note responsiveness on Wi-Fi and mobile data. Clean all synthetic records afterward. Do not use the personal archive for this acceptance test.
