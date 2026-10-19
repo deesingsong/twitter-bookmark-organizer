@@ -149,4 +149,4 @@ This dated update supersedes any earlier statements above that no production Neo
 5. Run bounded synthetic production smoke tests, verify schema/extensions and cascades, then clean all synthetic rows. Confirm preview isolation and physical Android access.
 6. Only after every gate passes, explicitly authorize the personal archive import.
 
-Until these actions are complete, personal archive import remains **BLOCKED**. No deployment was initiated and no personal bookmark data was uploaded.
+Until these actions are complete, personal archive import remains **BLOCKED**. The staging branch was pushed through GitHub and its Vercel Preview check is pending; no production deployment was initiated, and no personal bookmark data was uploaded.
