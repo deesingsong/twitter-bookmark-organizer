@@ -169,7 +169,7 @@ The app runtime reads server-only `DATABASE_URL`; `DATABASE_URL_UNPOOLED` is use
 
 The staging branch is 13 commits ahead of `main`, with six changed files and no commits behind at comparison time. It contains the transaction-local search settings fix and updated status documentation; the latest GitHub-triggered Preview check succeeded. PR #1 remains open and documentation-only. PR #2 from `staging/vercel-test` to `main` is open for review; no PR is merged automatically.
 
-Synthetic production application tests were not run: the deployed app could not be reached through an independently identified origin with an owner-authenticated session, and production credentials have not been configured in Vercel. The database remains empty.
+After the transaction-local settings change, the guarded semantic-search route integration test passed 1/1 on the isolated development `bookmark_dev` database using synthetic records; its cleanup assertion confirmed zero bookmarks and embeddings afterward. Synthetic production application tests were not run: the deployed app could not be reached through an independently identified origin with an owner-authenticated session, and production credentials have not been configured in Vercel. The production database remains empty.
 
 ### Android owner procedure
 
