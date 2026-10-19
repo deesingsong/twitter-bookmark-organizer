@@ -165,11 +165,11 @@ Project `twitter-bookmark-organizer-production` (`proud-forest-76521048`), regio
 
 ### Environment and release state
 
-The app runtime reads server-only `DATABASE_URL`; `DATABASE_URL_UNPOOLED` is used by the local Drizzle migration config. No production variables were added by this session because it cannot access the project settings API. Current Vercel environment mappings could not be read back. No credentials were written to local files or Git. Preview database isolation is unverified.
+The app runtime reads server-only `DATABASE_URL`; `DATABASE_URL_UNPOOLED` is used by the local Drizzle migration config. The owner reports that the pooled production `DATABASE_URL` has been configured in Vercel for Production only. This session cannot read environment mappings back, so the variable scope and Preview's lack of access to production Neon remain owner-reported and unverified here. No credentials were written to local files or Git. Preview database isolation is unverified.
 
 The staging branch has six changed files and no commits behind `main` at the last comparison. It contains the transaction-local search settings fix and updated status documentation; PR #2's latest GitHub-triggered Preview is Ready at `https://twitter-bookmark-organizer-git-sta-fa284f-deesingsongs-projects.vercel.app`. PR #1 remains open and documentation-only. PR #2 from `staging/vercel-test` to `main` is open for review; no PR is merged automatically.
 
-After the transaction-local settings change, the guarded semantic-search route integration test passed 1/1 on the isolated development `bookmark_dev` database using synthetic records; its cleanup assertion confirmed zero bookmarks and embeddings afterward. Synthetic production application tests were not run: production `DATABASE_URL` has not been configured in Vercel and no owner-authenticated browser/API session is available here. The production database remains empty.
+After the transaction-local settings change, the guarded semantic-search route integration test passed 1/1 on the isolated development `bookmark_dev` database using synthetic records; its cleanup assertion confirmed zero bookmarks and embeddings afterward. Synthetic production application tests were not run: PR #2 remains unmerged, and no owner-authenticated browser/API session is available here. The production database remains empty. The production database remains empty.
 
 ### Android owner procedure
 
