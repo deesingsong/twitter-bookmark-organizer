@@ -129,3 +129,24 @@ These local results do not clear the security gate. Real archive import remains 
 - Standard Protection does not protect production domains; Vercel's current documentation distinguishes it from All Deployments, which covers production domains as well. Restore All Deployments until the intended project/domain binding is confirmed. See https://vercel.com/docs/deployment-protection and https://vercel.com/changelog/protect-production-deployments-for-free-on-every-plan.
 - GitHub's Vercel status checks for the recorded production commit (`2e66d36`) and preview commit (`6ccfcb9`) still report success. This confirms those recorded GitHub integration checks; it does not establish current access protection or current deployment-to-domain binding.
 - Bypass revocation is owner-reported and not independently confirmed. No bypass value was requested, used, or recreated. No production database or personal archive is connected.
+
+## Continuation update — 2026-10-19
+
+This dated update supersedes any earlier statements above that no production Neon project exists or that current deployment protection is verified:
+
+- **Neon:** With the owner's explicit approval, created the dedicated Free project `twitter-bookmark-organizer-production` in `aws-ap-southeast-1` (Singapore), PostgreSQL 17. Applied the checked-in Drizzle migrations successfully using the direct URL held only in process memory. No credentials were written to `.env.local`, Git, or Vercel. No synthetic data or personal archive was inserted. Production schema migration succeeded; production smoke tests remain blocked until the Vercel privacy gate is independently verified.
+- **Vercel:** The owner reports changing the setting to Standard Protection and revoking the automation bypass. Neither setting was read back. Vercel's current documentation says Standard Protection does not cover production domains; All Deployments does. Therefore production access protection is **UNVERIFIED / BLOCKED**. On 2026-10-19 a clean browser context visiting the known PR #1 preview root was redirected to Vercel SSO (302), confirming anonymous denial for that root only. No current production origin is verified, and no API endpoints were tested in this pass.
+- **GitHub:** The recorded main production check and PR #1 Preview check remain successful GitHub-triggered builds. This verifies the deployment path only, not privacy. PR #1 remains open; no merge or production deployment was performed in this continuation.
+- **Code audit:** Search request settings now run inside the same database transaction as their queries, with transaction-local `statement_timeout` and pg_trgm threshold settings. This avoids relying on session settings across Neon pooled transactions.
+- **Local verification:** TypeScript passed; ESLint passed with two existing warnings; Drizzle static migration check passed; Vitest passed 325 tests with six guarded skips; production build passed. The 2026-10-18 development integration checks (five indexing tests and one semantic route test) and 23 Playwright desktop/emulated-mobile tests remain historical evidence; they were not rerun here. Physical Android is unverified.
+
+### Owner actions before any personal archive import
+
+1. In the intended Vercel project, restore Vercel Authentication to **All Deployments**, save, reopen, and independently verify the setting covers production and every preview/generated deployment URL.
+2. Review project/team members, grants, share links, exceptions, trusted sources, and automation bypass inventory. Verify bypass revocation rather than relying on the report alone.
+3. Identify and verify the actual production domain and current preview URL. Test anonymous denial for UI, assets, read APIs, and state-changing APIs. Test with the owner account and a separate unauthorized Vercel account.
+4. Configure separate production and preview Neon credentials in the corresponding Vercel environments only after the access review passes. Keep the production URL out of preview and local development.
+5. Run bounded synthetic production smoke tests, verify schema/extensions and cascades, then clean all synthetic rows. Confirm preview isolation and physical Android access.
+6. Only after every gate passes, explicitly authorize the personal archive import.
+
+Until these actions are complete, personal archive import remains **BLOCKED**. No deployment was initiated and no personal bookmark data was uploaded.
