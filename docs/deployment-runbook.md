@@ -165,9 +165,9 @@ Project `twitter-bookmark-organizer-production` (`proud-forest-76521048`), regio
 
 ### Environment and release state
 
-The app runtime reads server-only `DATABASE_URL`; `DATABASE_URL_UNPOOLED` is used by the local Drizzle migration config. No production variables were added to Vercel because this session cannot access the project settings API. Production credentials remain absent from local files and Git. Preview remains without production credentials; its database isolation is unverified.
+The app runtime reads server-only `DATABASE_URL`; `DATABASE_URL_UNPOOLED` is used by the local Drizzle migration config. No production variables were added by this session because it cannot access the project settings API. Current Vercel environment mappings could not be read back. No credentials were written to local files or Git. Preview database isolation is unverified.
 
-The staging branch is 13 commits ahead of `main`, with six changed files and no commits behind. It contains the transaction-local search settings fix and updated status documentation; the latest GitHub-triggered Preview check succeeded. PR #1 remains open and documentation-only. A separate PR from `staging/vercel-test` to `main` is the candidate for review; no PR is merged automatically.
+The staging branch is 13 commits ahead of `main`, with six changed files and no commits behind at comparison time. It contains the transaction-local search settings fix and updated status documentation; the latest GitHub-triggered Preview check succeeded. PR #1 remains open and documentation-only. PR #2 from `staging/vercel-test` to `main` is open for review; no PR is merged automatically.
 
 Synthetic production application tests were not run: the deployed app could not be reached through an independently identified origin with an owner-authenticated session, and production credentials have not been configured in Vercel. The database remains empty.
 
