@@ -1,6 +1,7 @@
 # Private deployment runbook
 
 This runbook records Milestone 5 production validation and the remaining owner acceptance limits. **Milestone 5 is functionally accepted for desktop use as of 2026-10-21.** The first personal archive import has not been authorized or performed. The owner verified Production deployment and database connectivity, Vercel Authentication and anonymous denial on tested routes, Production-only Neon configuration with Preview isolation, synthetic import/reimport behavior, annotations, all search modes, WebGPU embedding inference and persistence, individual and bulk deletion, and complete synthetic-data cleanup. The final production Neon check returned zero rows across all eight application tables. The separate unauthorized-account test, physical Android acceptance, and full-scale personal-archive indexing/retrieval remain unverified. See the final acceptance record below for details. No personal archive contents, credentials, bypass values, or real vectors belong in this document or the public repository.
+
 ## Evidence at M5 kickoff — 2026-10-18
 
 | Area | Confirmed evidence | Remaining gate |
