@@ -1,6 +1,6 @@
 # Private deployment runbook
 
-This runbook covers Milestone 5 delivery and owner checks. **Personal archive import is BLOCKED until Vercel Authentication on All Deployments, anonymous and unauthorized-account denial, automation bypass review, owner access, and database separation are verified.** Anonymous denial has passed for the specific production and preview paths recorded below; the other gates remain open. Use synthetic records while validating. No personal archive contents, credentials, bypass values, or real vectors belong in this document or the public repository.
+This runbook records Milestone 5 production validation and the remaining owner acceptance limits. **Milestone 5 is functionally accepted for desktop use as of 2026-10-21.** The first personal archive import has not been authorized or performed. The owner verified Production deployment and database connectivity, Vercel Authentication and anonymous denial on tested routes, Production-only Neon configuration with Preview isolation, synthetic import/reimport behavior, annotations, all search modes, WebGPU embedding inference and persistence, individual and bulk deletion, and complete synthetic-data cleanup. The final production Neon check returned zero rows across all eight application tables. The separate unauthorized-account test, physical Android acceptance, and full-scale personal-archive indexing/retrieval remain unverified. See the final acceptance record below for details. No personal archive contents, credentials, bypass values, or real vectors belong in this document or the public repository.
 
 ## Evidence at M5 kickoff — 2026-10-18
 
@@ -86,7 +86,7 @@ Record M5 command results separately from the kickoff results above. No successf
 
 ## Completion record
 
-M5 remains **UNVERIFIED / BLOCKED** until each item has dated evidence:
+Historical completion gate as recorded before owner production acceptance (superseded by the final acceptance record below): M5 had remained **UNVERIFIED / BLOCKED** until each item had dated evidence:
 
 - [ ] M5 local audit and regressions pass, with justified skips recorded.
 - [ ] Preview/production databases, roles, environment mappings and migrations are verified separately.
@@ -174,3 +174,26 @@ After the transaction-local settings change, the guarded semantic-search route i
 ### Android owner procedure
 
 After the production environment and protected deployment are ready, use Android Chrome signed in through Vercel Authentication. Record device model, Android/Chrome versions, first and cached model initialization times, and whether inference reports WebGPU or WASM. Browse synthetic bookmarks, try filters and search, edit a note, manage a collection, run semantic and hybrid search, background/reopen Chrome to check session and model-cache persistence, and note responsiveness on Wi-Fi and mobile data. Clean all synthetic records afterward. Do not use the personal archive for this acceptance test.
+
+
+## Final Milestone 5 production acceptance — 2026-10-21
+
+The owner reports that Milestone 5 passed production functional acceptance for desktop use with synthetic data only. The first personal archive import remains unauthorized and was not performed.
+
+### Verified by the owner
+
+- Production deployment reached Ready and the application connected to the dedicated production Neon database.
+- Vercel Authentication was enabled for All Deployments. Anonymous access was denied on the routes tested by the owner. The owner confirmed Production-only Neon configuration and Preview isolation.
+- The committed synthetic Twitter archive fixture imported successfully. Duplicate prevention worked, and owner notes, tags, and collections remained intact across reimports.
+- Exact, Meaning, and All search worked. BGE-small inference ran with WebGPU, and embedding records persisted after a page refresh.
+- Individual and bulk bookmark deletion worked.
+- Synthetic data cleanup completed. A final direct production Neon verification found **zero records in each of the eight application tables**: `bookmarks`, `bookmark_embeddings`, `import_jobs`, `import_batches`, `tags`, `bookmark_tags`, `collections`, and `collection_bookmarks`.
+
+### Limitations that remain
+
+- Denial for a separate unauthorized Vercel account has not been independently tested.
+- Physical Android compatibility and performance remain unverified.
+- Full-scale indexing and retrieval performance with the personal archive have not been tested.
+- The first real personal archive import has not been authorized or performed.
+
+This record supersedes earlier dated statements above that PR #2 was unmerged, synthetic production smoke tests had not run, or production database connectivity and Preview isolation were unverified. Those statements describe the state at their recorded dates. Do not interpret functional desktop acceptance as completion of the outstanding security, Android, or full-scale performance checks. Do not import personal bookmarks without the owner's separate authorization.
