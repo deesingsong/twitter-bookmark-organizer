@@ -35,23 +35,23 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await withDatabase(async (db) => {
-      await db.execute(sql`select set_config('statement_timeout', '3000ms', false)`);
-      const { sortAt, filters, predicate, rank, score } = buildBookmarkQuery(db, f, query);
+    const result = await withDatabase(async (db) => db.transaction(async (tx) => {
+      await tx.execute(sql`select set_config('statement_timeout', '3000ms', true)`);
+      const { sortAt, filters, predicate, rank, score } = buildBookmarkQuery(tx, f, query);
       const predicates = [...(predicate ? [predicate] : []), ...filters];
       if (cursor) {
         if (f.q && f.sort === "relevance") predicates.push(or(lt(rank, cursor.rank), and(eq(rank, cursor.rank), or(lt(score, cursor.score), and(eq(score, cursor.score), or(lt(sortAt, cursor.at), and(eq(sortAt, cursor.at), lt(bookmarks.id, cursor.id)))!))!))!);
         else predicates.push(or(lt(sortAt, cursor.at), and(eq(sortAt, cursor.at), lt(bookmarks.id, cursor.id)))!);
       }
-      if (query.fuzzyText) await db.execute(sql`select set_config('pg_trgm.word_similarity_threshold', '0.55', false)`);
-      const rows = await db.select({ bookmark: bookmarks, sortAt, rank, score }).from(bookmarks).where(predicates.length ? and(...predicates) : undefined)
+      if (query.fuzzyText) await tx.execute(sql`select set_config('pg_trgm.word_similarity_threshold', '0.55', true)`);
+      const rows = await tx.select({ bookmark: bookmarks, sortAt, rank, score }).from(bookmarks).where(predicates.length ? and(...predicates) : undefined)
         .orderBy(...(f.q && f.sort === "relevance" ? [desc(rank), desc(score), desc(sortAt), desc(bookmarks.id)] : [desc(sortAt), desc(bookmarks.id)]))
         .limit(f.limit + 1);
       const page = rows.slice(0, f.limit);
       const ids = page.map(({ bookmark }) => bookmark.id);
       const [tagRows, collectionRows] = await Promise.all([
-        ids.length ? db.select({ bookmarkId: bookmarkTags.bookmarkId, id: tags.id, name: tags.name }).from(bookmarkTags).innerJoin(tags, eq(tags.id, bookmarkTags.tagId)).where(inArray(bookmarkTags.bookmarkId, ids)) : Promise.resolve([]),
-        ids.length ? db.select({ bookmarkId: collectionBookmarks.bookmarkId, id: collections.id, name: collections.name }).from(collectionBookmarks).innerJoin(collections, eq(collections.id, collectionBookmarks.collectionId)).where(inArray(collectionBookmarks.bookmarkId, ids)) : Promise.resolve([]),
+        ids.length ? tx.select({ bookmarkId: bookmarkTags.bookmarkId, id: tags.id, name: tags.name }).from(bookmarkTags).innerJoin(tags, eq(tags.id, bookmarkTags.tagId)).where(inArray(bookmarkTags.bookmarkId, ids)) : Promise.resolve([]),
+        ids.length ? tx.select({ bookmarkId: collectionBookmarks.bookmarkId, id: collections.id, name: collections.name }).from(collectionBookmarks).innerJoin(collections, eq(collections.id, collectionBookmarks.collectionId)).where(inArray(collectionBookmarks.bookmarkId, ids)) : Promise.resolve([]),
       ]);
       const enriched = page.map(({ bookmark, sortAt: at, rank: matchRank }) => {
         const { searchDocument, searchText, searchIdentifiers, ...publicBookmark } = bookmark;
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
       });
       const last = page.at(-1);
       return { bookmarks: enriched, nextCursor: rows.length > f.limit && last ? encodeCursor(sig, f.q && f.sort === "relevance" ? last.rank : 0, f.q && f.sort === "relevance" ? last.score : 0, last.sortAt, last.bookmark.id) : null };
-    });
+    }));
     return jsonResponse(result);
   } catch { return apiError("library_unavailable", 503); }
 }

@@ -10,7 +10,7 @@ import { fuseSearchRankings, MAX_SEARCH_CANDIDATES, rankSemanticCandidates } fro
 import { encodeSemanticCursor, type SemanticSearchInput } from "./semantic-request";
 
 /** Every eligibility/structured predicate is inside the query's top-200 limit. */
-export function semanticCandidateQuery(db: Database, input: SemanticSearchInput) {
+export function semanticCandidateQuery(db: Pick<Database, "select">, input: SemanticSearchInput) {
   const { filters, sortAt } = buildBookmarkQuery(db, input, parseSearchQuery(input.q));
   const distance = sql<number>`${cosineDistance(bookmarkEmbeddings.embedding, input.queryVector)}`.mapWith(Number);
   return db.select({
@@ -32,20 +32,21 @@ export function semanticCandidateQuery(db: Database, input: SemanticSearchInput)
 
 /** Recompute bounded, cursor-independent rankings, then hydrate just the page. */
 export async function searchBookmarks(db: Database, input: SemanticSearchInput, signature: string, cursorId?: string) {
-  await db.execute(sql`select set_config('statement_timeout', '3000ms', false)`);
+  return db.transaction(async (tx) => {
+  await tx.execute(sql`select set_config('statement_timeout', '3000ms', true)`);
   const query = parseSearchQuery(input.q);
-  const { sortAt, filters, predicate, rank, score, priorityPredicate } = buildBookmarkQuery(db, input, query);
+  const { sortAt, filters, predicate, rank, score, priorityPredicate } = buildBookmarkQuery(tx, input, query);
   if (input.mode === "hybrid" && query.fuzzyText) {
-    await db.execute(sql`select set_config('pg_trgm.word_similarity_threshold', '0.55', false)`);
+    await tx.execute(sql`select set_config('pg_trgm.word_similarity_threshold', '0.55', true)`);
   }
   const candidateSelection = { id: bookmarks.id, sortAt, rank, score };
-  const priority = await db.select(candidateSelection).from(bookmarks).where(and(priorityPredicate, ...filters))
+  const priority = await tx.select(candidateSelection).from(bookmarks).where(and(priorityPredicate, ...filters))
     .orderBy(desc(rank), desc(score), desc(sortAt), desc(bookmarks.id)).limit(MAX_SEARCH_CANDIDATES);
   const lexical = input.mode === "hybrid"
-    ? await db.select(candidateSelection).from(bookmarks).where(and(predicate, ...filters))
+    ? await tx.select(candidateSelection).from(bookmarks).where(and(predicate, ...filters))
       .orderBy(desc(rank), desc(score), desc(sortAt), desc(bookmarks.id)).limit(MAX_SEARCH_CANDIDATES)
     : [];
-  const semantic = rankSemanticCandidates(await semanticCandidateQuery(db, input), { space: EMBEDDING_CONTRACT });
+  const semantic = rankSemanticCandidates(await semanticCandidateQuery(tx, input), { space: EMBEDDING_CONTRACT });
   const priorityIds = priority.map(({ id }) => id);
   const semanticIds = semantic.map(({ id }) => id);
   const lexicalIds = lexical.map(({ id }) => id);
@@ -71,11 +72,11 @@ export async function searchBookmarks(db: Database, input: SemanticSearchInput, 
   const start = cursorIndex + 1;
   const pageIds = rankedIds.slice(start, start + input.limit);
   if (!pageIds.length) return { bookmarks: [], nextCursor: null };
-  const rows = await db.select().from(bookmarks).where(inArray(bookmarks.id, pageIds));
+  const rows = await tx.select().from(bookmarks).where(inArray(bookmarks.id, pageIds));
   const [tagRows, collectionRows] = await Promise.all([
-    db.select({ bookmarkId: bookmarkTags.bookmarkId, id: tags.id, name: tags.name }).from(bookmarkTags)
+    tx.select({ bookmarkId: bookmarkTags.bookmarkId, id: tags.id, name: tags.name }).from(bookmarkTags)
       .innerJoin(tags, eq(tags.id, bookmarkTags.tagId)).where(inArray(bookmarkTags.bookmarkId, pageIds)),
-    db.select({ bookmarkId: collectionBookmarks.bookmarkId, id: collections.id, name: collections.name }).from(collectionBookmarks)
+    tx.select({ bookmarkId: collectionBookmarks.bookmarkId, id: collections.id, name: collections.name }).from(collectionBookmarks)
       .innerJoin(collections, eq(collections.id, collectionBookmarks.collectionId)).where(inArray(collectionBookmarks.bookmarkId, pageIds)),
   ]);
   const hydrated = new Map(rows.map((bookmark) => [bookmark.id, bookmark]));
@@ -94,4 +95,5 @@ export async function searchBookmarks(db: Database, input: SemanticSearchInput, 
   });
   const lastId = pageIds.at(-1)!;
   return { bookmarks: page, nextCursor: start + input.limit < rankedIds.length ? encodeSemanticCursor(signature, lastId) : null };
+  });
 }

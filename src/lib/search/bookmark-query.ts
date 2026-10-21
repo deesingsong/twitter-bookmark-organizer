@@ -22,7 +22,7 @@ export const lexicalQuerySchema = bookmarkFiltersSchema.extend({
 
 /** Shared lexical tiers and filters; fuzzy candidates are filtered before LIMIT. */
 export function buildBookmarkQuery(
-  db: Database,
+  db: Pick<Database, "select">,
   f: z.infer<typeof bookmarkFiltersSchema>,
   query: ParsedSearchQuery,
 ) {

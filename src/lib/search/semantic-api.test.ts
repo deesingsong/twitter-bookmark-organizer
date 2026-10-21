@@ -62,6 +62,10 @@ function fixture(options: { priority?: Candidate[]; lexical?: Candidate[]; seman
     const selected = branch++ === 0 ? options.priority : options.lexical;
     return { rows: (selected ?? []).map((candidate) => [candidate.id, candidate.at ?? date, candidate.rank ?? 3, candidate.score ?? 0.5]) };
   });
+  Object.defineProperty(database, "transaction", {
+    configurable: true,
+    value: (operation: (tx: typeof database) => Promise<unknown>) => operation(database),
+  });
   vi.mocked(withDatabase).mockImplementation(async (operation) => operation(database as unknown as Database));
   return queries;
 }
